@@ -30,7 +30,7 @@ struct Estheticsh: ParsableCommand {
     }
     
     var flagInfo = false
-
+    var text = ""
     
     // App config.
     static let configuration = CommandConfiguration(
@@ -40,8 +40,8 @@ struct Estheticsh: ParsableCommand {
     )
         
     // Arguments.
-    @Argument(help: "User text input (Default: '' empty string).")
-    var text: String = ""
+    @Argument(help: "User text input.")
+    var args: [String]
     
     // Options.
     @Option(name: .customShort(FlagChar.color), help: "Foreground text color.")
@@ -92,12 +92,9 @@ struct Estheticsh: ParsableCommand {
         // Exit app, if some info has been printed.
         if flagInfo { Estheticsh.exit() }
         
-        // Exit app with error, if the "text" argument is not given.
-        if text == "" {
-            stderr.printError("Required argument.")
-            Estheticsh.exit(
-                withError: ExitCode(rawValue: PkgInfo.ExitCode.requiredArgument.rawValue)
-            )
+        // Concat all args.
+        for arg in args {
+            text += text == "" ? arg : " \(arg)"
         }
         
         // Print output.
