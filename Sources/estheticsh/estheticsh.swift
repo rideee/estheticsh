@@ -14,7 +14,21 @@ let stderr = StandardErrorOutputStream(
 @main
 struct Estheticsh: ParsableCommand {
     
+    // Flag character definition.
+    struct FlagChar {
+        static let color = Character("c")
+        static let bgColor = Character("b")
+        static let bold = Character("B")
+        static let dim = Character("d")
+        static let italic = Character("i")
+        static let underline = Character("u")
+        static let blink = Character("k")
+        static let swap = Character("s")
+        static let strikethrough = Character("S")
+    }
+    
     var flagInfo = false
+
     
     // App config.
     static let configuration = CommandConfiguration(
@@ -28,12 +42,27 @@ struct Estheticsh: ParsableCommand {
     var text: String = ""
     
     // Options.
-    @Option(name: .shortAndLong, help: "Foreground text color.")
+    @Option(name: .customShort(FlagChar.color), help: "Foreground text color.")
     var color: String? = nil
-    @Option(name: .shortAndLong, help: "Background text color.")
+    @Option(name: .customShort(FlagChar.bgColor), help: "Background text color.")
     var bgColor: String? = nil
    
     // Flags.
+    @Flag(name: .customShort(FlagChar.bold), help: "Text bold style.")
+    var styleBold = false
+    @Flag(name: .customShort(FlagChar.dim), help: "Text dim style.")
+    var styleDim = false
+    @Flag(name: .customShort(FlagChar.italic), help: "Text italic style.")
+    var styleItalic = false
+    @Flag(name: .customShort(FlagChar.underline), help: "Text underline style.")
+    var styleUnderline = false
+    @Flag(name: .customShort(FlagChar.blink), help: "Text blink style.")
+    var styleBlink = false
+    @Flag(name: .customShort(FlagChar.swap), help: "Text swap style.")
+    var styleSwap = false
+    @Flag(name: .customShort(FlagChar.strikethrough), help: "Text strikethrough style.")
+    var styleStrikethrough = false
+    
     @Flag(name: .long, help: "Print all available colors.")
     var colors = false
     @Flag(name: .long, help: "Print all available styles.")
