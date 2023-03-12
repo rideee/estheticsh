@@ -72,8 +72,6 @@ struct Estheticsh: ParsableCommand {
     var colors = false
     @Flag(name: .long, help: "Print all available styles.")
     var styles = false
-    @Flag(name: .long, help: "Print usage examples.")
-    var examples = false
     @Flag(name: .long, help: "Print the original name of this application.")
     var name = false
     @Flag(name: .long, help: "Print the app author information.")
