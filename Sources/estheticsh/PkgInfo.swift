@@ -14,8 +14,6 @@ struct PkgInfo {
     static let author = "Michał Kątnik (github.com/rideee)"
     static let repository = "https://github.com/rideee/estheticsh"
     
-    static let shortDescription = "\nMake your terminal output more aesthetic."
-    
     static var description: String {
     """
     Make your terminal output more aesthetic with \(name), by adding colorful output and some \
@@ -33,10 +31,5 @@ struct PkgInfo {
             Repository: \(repository)
         """
     }
-    
-    // Exit codes.
-    enum ExitCode: Int32 {
-        case requiredArgument = 1
-    }
-    
+
 }
