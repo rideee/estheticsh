@@ -14,6 +14,8 @@ let stderr = StandardErrorOutputStream(
 @main
 struct Estheticsh: ParsableCommand {
     
+    var flagInfo = false
+    
     // App config.
     static let configuration = CommandConfiguration(
         abstract: "\n" + PkgInfo.description,
@@ -32,8 +34,10 @@ struct Estheticsh: ParsableCommand {
     var bgColor: String? = nil
    
     // Flags.
-    @Flag(name: .long, help: "Print all available color names.")
+    @Flag(name: .long, help: "Print all available colors.")
     var colors = false
+    @Flag(name: .long, help: "Print all available styles.")
+    var styles = false
     @Flag(name: .long, help: "Print usage examples.")
     var examples = false
     @Flag(name: .long, help: "Print the original name of this application.")
@@ -48,11 +52,13 @@ struct Estheticsh: ParsableCommand {
     mutating func run() throws {
         
         // Dependent on the given flags - information printouts.
-        if name { print(PkgInfo.name); Estheticsh.exit() }
-        if author { print(PkgInfo.author); Estheticsh.exit() }
-        if repository { print(PkgInfo.repository); Estheticsh.exit() }
-        if colors { printAllColors(); Estheticsh.exit() }
-
+        if name { print(PkgInfo.name); flagInfo = true }
+        if author { print(PkgInfo.author); flagInfo = true }
+        if repository { print(PkgInfo.repository); flagInfo = true }
+        if colors { printAllColors(); flagInfo = true }
+        if styles { printAllStyles(); flagInfo = true }
+        // Exit app, if some info has been printed.
+        if flagInfo { Estheticsh.exit() }
         
         // Exit app with error, if the "text" argument is not given.
         if text == "" {
@@ -64,7 +70,7 @@ struct Estheticsh: ParsableCommand {
     }
     
     
-    // Print all available color names.
+    // Print all available colors.
     func printAllColors() {
         let minLength = 20
         let header = "Name:" + String(repeating: " ", count: minLength - 5) + "Option:"
@@ -112,6 +118,55 @@ struct Estheticsh: ParsableCommand {
             colorNameString += String(repeating: " ", count: minLength - colorNameLength)
             
             print(colorNameString.applyingColor(c) + "-c \(c)")
+        }
+        
+        // Blank line.
+        print()
+    }
+    
+    
+    // Print all available styles.
+    func printAllStyles() {
+        let minLength = 36
+        let marginLeft = String(repeating: " ", count: 2)
+        let bannerText = " Styles "
+        let header = "Style:" + String(repeating: " ", count: minLength - 5) + "Option:"
+        
+        // Dictionary key: Style, value: flag.
+        let stylesDict = [
+            Style.bold: "-b",
+            Style.dim: "-d",
+            Style.italic: "-i",
+            Style.underline: "-u",
+            Style.blink: "-B",
+            Style.swap: "-S",
+            Style.strikethrough: "-s",
+        ]
+        
+        func printStyleRow(style: Style, flag: String) {
+            let text = "This is a '\(style)' style."
+            
+            print(
+                marginLeft + text.applyingStyle(style) +
+                String(repeating: " ", count: minLength - text.count) +
+                flag
+            )
+        }
+        
+        // Print banner.
+        print(
+            "\n" +
+            String(repeating: "-", count: (header.count - bannerText.count) / 2) +
+            bannerText +
+            String(repeating: "-", count: (header.count - bannerText.count) / 2) +
+            "\n\(header)"
+        )
+        
+        // Print style rows.
+        printStyleRow(style: Style.default, flag: "")   // Separated to keep this row on top.
+        
+        for (s, f) in stylesDict {
+            printStyleRow(style: s, flag: f)
         }
         
         // Blank line.
