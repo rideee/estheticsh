@@ -25,6 +25,8 @@ struct Estheticsh: ParsableCommand {
         static let blink = Character("k")
         static let swap = Character("s")
         static let strikethrough = Character("S")
+        static let noNewLine = Character("n")
+        static let toStderr = Character("e")
     }
     
     var flagInfo = false
@@ -62,7 +64,10 @@ struct Estheticsh: ParsableCommand {
     var styleSwap = false
     @Flag(name: .customShort(FlagChar.strikethrough), help: "Text strikethrough style.")
     var styleStrikethrough = false
-    
+    @Flag(name: .customShort(FlagChar.noNewLine), help: "No new line character at the end.")
+    var noNewLine = false
+    @Flag(name: .customShort(FlagChar.toStderr), help: "Print output to stderr.")
+    var toStderr = false
     @Flag(name: .long, help: "Print all available colors.")
     var colors = false
     @Flag(name: .long, help: "Print all available styles.")
@@ -95,6 +100,50 @@ struct Estheticsh: ParsableCommand {
             Estheticsh.exit(
                 withError: ExitCode(rawValue: PkgInfo.ExitCode.requiredArgument.rawValue)
             )
+        }
+        
+        // Print output.
+        parseAndPrint()
+    }
+    
+    
+    // Parse all given information and print output.
+    func parseAndPrint() {
+        var output = self.text
+        let terminator = self.noNewLine ? "" : "\n"
+        
+        // Foreground color. Apply color only if given color name exists in NamedColor (Rainbow).
+        if let color {
+            for c in Color.allCases {
+                if color == "\(c)" {
+                    output = output.applyingColor(c)
+                }
+            }
+        }
+        
+        // Background color. Apply color only if given color name exists in NamedColor (Rainbow).
+        if let bgColor {
+            for b in BackgroundColor.allCases {
+                if bgColor == "\(b)" {
+                    output = output.applyingBackgroundColor(b)
+                }
+            }
+        }
+        
+        // Styles.
+        if styleBold            { output = output.applyingStyle(.bold) }
+        if styleDim             { output = output.applyingStyle(.dim) }
+        if styleItalic          { output = output.applyingStyle(.italic) }
+        if styleUnderline       { output = output.applyingStyle(.underline) }
+        if styleBlink           { output = output.applyingStyle(.blink) }
+        if styleSwap            { output = output.applyingStyle(.swap) }
+        if styleStrikethrough   { output = output.applyingStyle(.strikethrough) }
+        
+        // Print output.
+        if self.toStderr {
+            stderr.write(output + terminator)
+        } else {
+            print(output, terminator: terminator)
         }
     }
     
