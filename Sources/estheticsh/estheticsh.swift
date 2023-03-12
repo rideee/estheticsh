@@ -163,13 +163,13 @@ struct Estheticsh: ParsableCommand {
         
         // Dictionary key: Style, value: flag.
         let stylesDict = [
-            Style.bold: "-b",
-            Style.dim: "-d",
-            Style.italic: "-i",
-            Style.underline: "-u",
-            Style.blink: "-B",
-            Style.swap: "-S",
-            Style.strikethrough: "-s",
+            Style.bold: "-\(FlagChar.bold)",
+            Style.dim: "-\(FlagChar.dim)",
+            Style.italic: "-\(FlagChar.italic)",
+            Style.underline: "-\(FlagChar.underline)",
+            Style.blink: "-\(FlagChar.blink)",
+            Style.swap: "-\(FlagChar.swap)",
+            Style.strikethrough: "-\(FlagChar.strikethrough)",
         ]
         
         func printStyleRow(style: Style, flag: String) {
