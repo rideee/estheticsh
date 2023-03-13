@@ -6,7 +6,7 @@
 
 CMD="run estheticsh $@"
 
-if ! type swift >&/dev/null; then
+if type swift >&/dev/null; then
     swift $CMD
 elif type docker >&/dev/null && test -s ./docker_swift.sh; then
     echo "swift command not found in PATH. Using docker img instead."
