@@ -1,8 +1,10 @@
-FROM swift:latest
+FROM fedora:latest
 
-RUN apt-get update && \
-    apt-get -y install docker
+RUN dnf -y update && \
+    dnf -y install swiftlang
 
 WORKDIR /app/
 
 COPY . .
+
+RUN swift --version
