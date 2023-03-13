@@ -1,5 +1,7 @@
 {
-  "image": "swift:latest",
+  "build": { 
+    "dockerfile": "Dockerfile" 
+  },
   "features": {
   }
 }
