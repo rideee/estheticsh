@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Docker swift shortcut script.
+# Build and Run app. 
+
+./docker_swift.sh swift run estheticsh $@
