@@ -3,4 +3,16 @@
 # Docker swift shortcut script.
 # Build and Run app. 
 
-./docker_swift.sh swift run estheticsh $@
+
+CMD="run estheticsh $@"
+
+if ! type swift >&/dev/null; then
+    swift $CMD
+elif type docker >&/dev/null && test -s ./docker_swift.sh; then
+    echo "swift command not found in PATH. Using docker img instead."
+    ./docker_swift.sh swift $CMD
+else
+    echo "ERROR: swift nor docker command not found in PATH..." >&2
+    exit 1
+fi
+
